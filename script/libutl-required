@@ -1,0 +1,21 @@
+#! /bin/bash
+
+# initialize (ignoring '-r')
+if [ "$1" == "-r" ]; then shift; fi
+. $(dirname "$0")/init.sh
+
+# first argument: script to run in required sources (recursively)
+# remaining arguments: passed on to the script
+if [ "$1" == "" ]; then
+  echo usage: $0 '<script-name>'
+  exit 1
+fi
+SCRIPT=$1
+shift
+
+# find and execute the requested script in the required package's source directory
+REQ_PATHS=$(cat ${SOURCE_DIR}/etc/packages-required)
+for REQ_PATH in ${REQ_PATHS}; do
+  REQ_SCRIPT=$(find ${SOURCE_DIR}/${REQ_PATH}/script -name '*-'${SCRIPT} -print)
+  "${REQ_SCRIPT}" -r "$@"
+done

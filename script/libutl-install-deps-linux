@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# require admin
+. ${SCRIPT_DIR}/require-admin.sh
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# install packages...

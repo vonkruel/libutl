@@ -1,0 +1,27 @@
+/**
+   \page app_sort Sort
+
+   \section app_sort_introduction Introduction
+
+   \b sort is like UNIX sort.  It uses utl::multiKeyQuickSort() to quickly sort lines of text.
+
+   \section app_sort_instructions Instructions
+
+   You can give the \b -r switch to specify a reversed sort order.  The lines of text to be
+   sorted are read in from standard input, and once EOF is reached, the sort is performed, and
+   the sorted lines are written to standard output.
+
+   For example:
+
+   \code
+   adam@phat:~/src/libutl/apps/sort> ./sort
+   // I type the following on 'sort' stdin (my terminal)
+   dabc
+   abcd
+   efgh^D
+   // 'sort' prints the following on its stdout (my terminal)
+   abcd
+   dabc
+   efgh
+   \endcode
+*/

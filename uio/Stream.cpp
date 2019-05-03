@@ -1,0 +1,704 @@
+#include <libutl/libutl.h>
+#include <libutl/util_inl.h>
+#include <libutl/Stream.h>
+#include <libutl/String.h>
+#include <libutl/Vector.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_CLASS_IMPL_ABC(utl::Stream);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_BEGIN;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::copy(const Object& rhs)
+{
+    auto& stream = utl::cast<Stream>(rhs);
+    _base = stream._base;
+    _name = utl::clone(stream._name);
+    _bitMask = stream._bitMask;
+    _bitByte = stream._bitByte;
+    _inCount = stream._inCount;
+    _outCount = stream._outCount;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const String&
+Stream::getName() const
+{
+    return *_name;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const String*
+Stream::getNamePtr() const
+{
+    if ((_name == nullptr) || _name->empty())
+        return nullptr;
+    return _name;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setName(const String& name)
+{
+    *_name = name;
+    _name->assertOwner();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setName(String* name)
+{
+    delete _name;
+    _name = name;
+    if (_name != nullptr)
+        _name->assertOwner();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Stream::isBOL() const
+{
+    return getFlag(io_bol);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setBOL(bool p_bol)
+{
+    setFlag(io_bol, p_bol);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Stream::isInput() const
+{
+    return getFlag(io_rd);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setInput(bool input)
+{
+    setFlag(io_rd, input);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Stream::isOutput() const
+{
+    return getFlag(io_wr);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setOutput(bool output)
+{
+    setFlag(io_wr, output);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::checkOK()
+{
+    if (error())
+        throwStreamErrorEx();
+    if (eof())
+        throwStreamEOFex();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::clearEOF()
+{
+    setEOF(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::clearError()
+{
+    setError(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Stream::eof() const
+{
+    return getFlag(io_eof);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setEOF(bool p_eof)
+{
+    setFlag(io_eof, p_eof);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Stream::error() const
+{
+    return getFlag(io_error);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::setError(bool p_error)
+{
+    setFlag(io_error, p_error);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Stream::ok() const
+{
+    return !error();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+size_t
+Stream::copyData(Stream& in, size_t numBytes, size_t bufSize)
+{
+    Vector<byte_t> buf(bufSize);
+    size_t numLeft = numBytes;
+    while (numLeft > 0)
+    {
+        size_t numRead;
+        try
+        {
+            numRead = in.read(buf, min(bufSize, numLeft), 1);
+        }
+        catch (StreamEOFex&)
+        {
+            break;
+        }
+        write(buf, numRead);
+        numLeft -= numRead;
+    }
+    return numBytes - numLeft;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::readLine(String& p_str)
+{
+    // initialize the string
+    size_t sz = 256;
+    char* str = new char[sz];
+    char* strPtr = str;
+    char* strLim = str + sz;
+
+    SCOPE_EXIT
+    {
+        delete[] str;
+    };
+
+    try
+    {
+        byte_t c;
+        do
+        {
+            c = this->get();
+
+            // translate newline into nul
+            if (c == '\n')
+                c = '\0';
+
+            // grow the array if necessary
+            if (strPtr == strLim)
+                utl::arrayGrow(str, strPtr, strLim);
+
+            // one more character...
+            *strPtr++ = c;
+        } while (c != '\0');
+    }
+    catch (StreamEOFex&)
+    {
+        if (strPtr == str)
+        {
+            throw;
+        }
+        if (strPtr == strLim)
+            arrayGrow(str, strPtr, strLim);
+        *strPtr++ = '\0';
+    }
+
+    p_str.set(str, true, true);
+
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::put(const char* str)
+{
+    size_t len = strlen(str);
+    if ((_indent == 0) && (len > 0))
+    {
+        write((byte_t*)str, len);
+        setBOL(str[len - 1] == '\n');
+        return self;
+    }
+    const char* p = str;
+    const char* lim = p + len;
+    const char* nextP;
+    bool bol = isBOL();
+    for (; p < lim; p = nextP)
+    {
+        if (*p == '\n')
+        {
+            bol = true;
+            write((byte_t*)p, 1);
+            nextP = p + 1;
+        }
+        else
+        {
+            for (nextP = p; (nextP < lim) && (*nextP != '\n'); ++nextP)
+                ;
+            if (bol)
+            {
+                bol = false;
+                _indentIfBOL();
+            }
+            write((byte_t*)p, nextP - p);
+        }
+    }
+    setBOL(bol);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::put(const char* str, size_t len)
+{
+    const char* p = str;
+    const char* lim = p + len;
+    if ((_indent == 0) && (len > 0))
+    {
+        write((byte_t*)str, len);
+        setBOL(str[len - 1] == '\n');
+        return self;
+    }
+    const char* nextP;
+    bool bol = isBOL();
+    for (; p < lim; p = nextP)
+    {
+        if (*p == '\n')
+        {
+            bol = true;
+            write((byte_t*)p, 1);
+            nextP = p + 1;
+        }
+        else
+        {
+            for (nextP = p; (nextP < lim) && (*nextP != '\n'); ++nextP)
+                ;
+            if (bol)
+            {
+                bol = false;
+                _indentIfBOL();
+            }
+            write((byte_t*)p, nextP - p);
+        }
+    }
+    setBOL(bol);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::writeSpaces(size_t num)
+{
+    while (num > 256)
+    {
+        write(spaces, 256);
+        num -= 256;
+    }
+    if (num > 0)
+        write(spaces, num);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(void* ptr)
+{
+    char buf[64];
+    sprintf(buf, "%p", ptr);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(const char* str)
+{
+    return put(str);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(int16_t n)
+{
+    char buf[64];
+    sprintf(buf, "%hd", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(int16_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = (short)strtol(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(uint16_t n)
+{
+    char buf[64];
+    sprintf(buf, "%hu", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(uint16_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = (ushort_t)strtoul(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(int32_t n)
+{
+    char buf[64];
+    sprintf(buf, "%d", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(int32_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = (int)strtol(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(uint32_t n)
+{
+    char buf[64];
+    sprintf(buf, "%u", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(uint32_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = (uint32_t)strtoul(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(long n)
+{
+    char buf[64];
+    sprintf(buf, "%ld", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(long& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = strtol(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(ulong_t n)
+{
+    char buf[64];
+    sprintf(buf, "%lu", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(ulong_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = strtoul(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#if UTL_SIZEOF_LONG == 4
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(int64_t n)
+{
+    char buf[64];
+    sprintf(buf, "%lld", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(int64_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = strtoll(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(uint64_t n)
+{
+    char buf[64];
+    sprintf(buf, "%llu", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(uint64_t& n)
+{
+    char buf[64];
+    readToken(buf, 64);
+    n = strtoull(buf, nullptr, _base);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#endif // UTL_SIZEOF_LONG == 4
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator<<(double n)
+{
+    char buf[512];
+    sprintf(buf, "%f", n);
+    return put(buf);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Stream&
+Stream::operator>>(double& n)
+{
+    char buf[512];
+    readToken(buf, 128);
+    n = strtod(buf, nullptr);
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::utl_init()
+{
+    memset(spaces, ' ', 256);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::clear()
+{
+    // initialize flags
+    if (_name != nullptr)
+        _name->clear();
+    setMode(0);
+    setEOF(false);
+    setError(true);
+    setBOL(true);
+    _bitMask = 0x80;
+    _bitByte = 0;
+    _inCount = 0;
+    _outCount = 0;
+    _indent = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::throwStreamEOFex()
+{
+    setEOF(true);
+    throw StreamEOFex(utl::clone(getNamePtr()));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::throwStreamErrorEx()
+{
+    setError(true);
+    throw StreamErrorEx(utl::clone(getNamePtr()));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::readToken(char* buf, size_t size)
+{
+    buf[0] = skipWS();
+    readUntilWS(buf + 1, size - 1);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::readUntilWS(char* buf, size_t size)
+{
+    char* bufEnd = buf + size - 1;
+    for (;;)
+    {
+        // read a character
+        if (eof())
+            return;
+        byte_t c = get();
+
+        if (isspace(c))
+            break;
+        *buf = c;
+        if (++buf == bufEnd)
+            break;
+    }
+    *buf = '\0';
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+byte_t
+Stream::skipWS()
+{
+    for (;;)
+    {
+        byte_t c = get();
+        if (!isspace(c))
+            return c;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::init()
+{
+    _name = new String;
+    clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Stream::deInit()
+{
+    delete _name;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+byte_t Stream::spaces[256];
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_END;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+utl::Stream&
+operator<<(utl::Stream& lhs, const utl::Object& rhs)
+{
+    return lhs << rhs.toString();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+utl::Stream&
+operator>>(utl::Stream& lhs, utl::String& rhs)
+{
+    return lhs.readLine(rhs);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+utl::Stream&
+operator<<(utl::Stream& lhs, const utl::String& rhs)
+{
+    const char* str = rhs.get();
+    if (str == nullptr)
+        return lhs;
+    return lhs << str;
+}

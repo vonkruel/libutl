@@ -1,0 +1,7 @@
+UTL_CC          = UTL_CC_MINGW
+UTL_HOST_OS	= UTL_OS_WINDOWS
+HOST_OS_NAME	= mingw
+INST_ROOT	= $(HOST_ROOT)usr/x86_64-w64-mingw32/
+CONFIG_LD_OPTS	+= -Wl,--enable-auto-import,--no-undefined,--enable-runtime-pseudo-reloc,--export-all-symbols
+LIBUTL_LIBDIR   = $(INST_ROOT)lib/
+LIBUTL_SHARED	= $(LIBUTL_BASENAME).dll

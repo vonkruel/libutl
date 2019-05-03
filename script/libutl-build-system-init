@@ -1,0 +1,23 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# generate fresh build system(s)
+cd "${SOURCE_DIR}"
+rm -rf build
+mkdir build
+cd build
+if [ `uname -o` == 'Msys' ]; then
+  cmake -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE -G "Visual Studio 15 2017 Win64" ..
+else
+  for CONFIG in debug release; do
+    CONFIG_UC=$(echo $CONFIG | tr '[:lower:]' '[:upper:]')
+    BUILD_DIR=${CONFIG}
+    rm -rf ${CONFIG}
+    mkdir ${CONFIG}
+    cd ${CONFIG}
+    cmake -DCMAKE_BUILD_TYPE=${CONFIG_UC} ../..
+    cd ..
+  done
+fi

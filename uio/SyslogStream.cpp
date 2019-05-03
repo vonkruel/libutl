@@ -1,0 +1,114 @@
+#include <libutl/libutl.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#if UTL_HOST_TYPE == UTL_HT_UNIX
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include <libutl/SyslogStream.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_CLASS_IMPL(utl::SyslogStream);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_BEGIN;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+SyslogStream::open(const String& ident, int facility, int level)
+{
+    close();
+    _ident = ident;
+    openlog(_ident, LOG_PID, facility);
+    setFacility(facility);
+    setLevel(level);
+    setMode(io_wr);
+    setError(false);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+SyslogStream::close()
+{
+    if (_facility != int_t_max)
+    {
+        closelog();
+        clear();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+SyslogStream::clear()
+{
+    super::clear();
+    clearSelf();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+SyslogStream::overflow()
+{
+    if (_oBufPos == 0)
+    {
+        return;
+    }
+
+    // newlines -> nullptr terminators
+    for (size_t i = 0; i < _oBufPos; i++)
+    {
+        if (_oBuf[i] == '\n')
+        {
+            _oBuf[i] = '\0';
+        }
+    }
+
+    char lastChar = _oBuf[_oBufPos - 1];
+    bool lastOK = (lastChar == '\0');
+    if (!lastOK)
+    {
+        _oBuf[_oBufPos - 1] = '\0';
+    }
+
+    size_t i = 0;
+    while (i != _oBufPos)
+    {
+        auto cur = reinterpret_cast<char*>(_oBuf.get()) + i;
+        size_t curLen = strlen(cur);
+        if (!lastOK && ((i + curLen) == _oBufPos))
+        {
+            cur[curLen] = lastChar;
+            memmove(_oBuf.get(), cur, curLen + 1);
+            _oBufPos = curLen + 1;
+            return;
+        }
+        syslog(_facility | _level, cur);
+        i += curLen + 1;
+    }
+    _oBufPos = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+SyslogStream::clearSelf()
+{
+    setLineBuffered(true);
+    setMode(io_wr);
+    _facility = _level = int_t_max;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_END;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#endif

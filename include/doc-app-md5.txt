@@ -1,0 +1,24 @@
+/**
+   \page app_md5 MD5
+
+   \section app_md5_introduction Introduction
+
+   \b md5 is a simple program with a simple purpose: to compute MD5
+   checksums for files and print them out.  MD5 is a very good way to
+   uniquely identify files -- the chance of two different files having
+   the same MD5 sums is extremely remote.
+
+   \section app_md5_instructions Instructions
+
+   Give a list of filenames as arguments -- MD5 sums for all the files
+   will be computed, and printed out for you.
+
+   For example:
+
+   \code
+   adam@phat:~/src/libutl/apps/md5> ./md5 /etc/passwd /bin/false /bin/sh
+   52dded48a569c11d216ef5d4b30b7aa6  /etc/passwd
+   9e057a04bf411e52669679bbc883d6a7  /bin/false
+   90049207e88f66ce4cc68f131fd2caa6  /bin/sh
+   \endcode
+*/

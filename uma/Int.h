@@ -1,0 +1,58 @@
+#pragma once
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include <libutl/Integer.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_BEGIN;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+   64-bit signed integer.
+
+   \author Adam McKee
+   \ingroup math
+*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class Int : public Integer<int64_t>
+{
+    UTL_CLASS_DECL(Int, Integer<int64_t>);
+    UTL_CLASS_DEFID;
+
+public:
+    /**
+       Constructor
+       \param i initial value
+    */
+    Int(int64_t i)
+        : Integer<int64_t>(i)
+    {
+    }
+
+    /**
+       Constructor.
+       \param str string representation of initial value
+    */
+    Int(const String& str)
+    {
+        set(str);
+    }
+
+    virtual void serialize(Stream& stream, uint_t io, uint_t mode = ser_default);
+
+    /** Get the absolute value of self. */
+    Int
+    abs() const
+    {
+        return Int(::abs(_n));
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_END;

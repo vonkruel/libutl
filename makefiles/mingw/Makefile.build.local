@@ -1,0 +1,8 @@
+AR		= x86_64-w64-mingw32-ar
+CC		= x86_64-w64-mingw32-g++
+CC_SWITCHES     = $(CC_SWITCHES_COMMON) -Wno-format -Wno-format-extra-args -mthreads
+CC_SWITCH_PIC	=
+CC_DEFINES	+= -D__USE_MINGW_ANSI_STDIO=1 -D_GNU_SOURCE=1
+EXT_LIBS        += -lm -lws2_32
+DLLTOOL		= x86_64-w64-mingw32-dlltool
+STRIP		= x86_64-w64-mingw32-strip

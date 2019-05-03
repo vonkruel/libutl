@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh 
+
+# clean our configurations
+for CONFIG in debug release; do
+  "${PACKAGE_PREFIX}-clean-config" ${CONFIG}
+done

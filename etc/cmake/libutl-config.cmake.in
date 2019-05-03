@@ -1,0 +1,18 @@
+# Config file for the libutl package
+#
+# Defines the following variables:
+#   LIBUTL_INCLUDE_DIRS - include directories for libutl
+#   LIBUTL_LIBRARIES    - libraries to link against
+
+# ${LIBUTL_CMAKE_DIR}: directory that contains this libutl-config.make
+#   This will have different values for BUILD vs INSTALL:
+#     .. for BUILD:   <libutl-source-path>
+#     .. for INSTALL: <install-prefix>/lib/CMake/libutl
+get_filename_component(LIBUTL_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(LIBUTL_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# libutl dependencies (contains definitions for IMPORTED targets)
+include("${LIBUTL_CMAKE_DIR}/libutl-targets.cmake")
+
+# These are IMPORTED targets created by libutl-targets.cmake
+set(LIBUTL_LIBRARIES libutl_shared libutl_static)

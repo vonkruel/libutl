@@ -1,0 +1,29 @@
+Source: libutl
+Maintainer: Adam McKee <adam@acmsproject.org>
+Section: libs
+Priority: extra
+Build-Depends: coreutils, debhelper (>= 10), findutils, grep, make, zsh, doxygen (>= 1.8.13), graphviz, libjemalloc-dev, libssl-dev, libstdc++-8-dev
+Standards-Version: 4.0.0
+Homepage: https://www.acmsproject.org/projects/libutl/
+
+Package: libutl
+Section: libs
+Architecture: amd64
+Depends: libjemalloc1, libstdc++6, libssl1.1
+Description: libUTL++ shared libraries
+ Install this package in order to run C++ programs dynamically linked against libUTL++.
+
+Package: libutl-dev
+Section: libdevel
+Architecture: amd64
+Depends: libutl (= ${source:Version}), libssl-dev, libstdc++-8-dev
+Suggests: libutl-doc (= ${source:Version})
+Description: libUTL++ development files
+ Install this package in order to build C++ programs that require libUTL++.
+
+Package: libutl-doc
+Section: doc
+Architecture: any
+Depends: libutl-dev (= ${source:Version})
+Description: libUTL++ documentation
+ Reference manual for the libUTL++ class library.

@@ -1,0 +1,17 @@
+#! /bin/zsh
+
+if [ "$#" != "1" ]; then
+    echo usage: config 'linux|mingw';
+    exit 1;
+fi
+
+if [ ! -d "$1" ]; then
+    echo error: \'$1\' is not a valid configuration;
+    exit 2;
+fi
+
+rm -f Makefile.build.local Makefile.config.local
+for f in $1/Makefile.*; do
+    ln -sf $f .
+done
+exit 0

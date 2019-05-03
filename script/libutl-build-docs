@@ -1,0 +1,10 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# remove and re-build documentation
+cd "${SOURCE_DIR}"
+rm -rf build/doc
+mkdir build/doc
+doxygen etc/doxygen.cfg

@@ -1,0 +1,60 @@
+#include <libutl/libutl.h>
+#include <libutl/Token.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_CLASS_IMPL(utl::Token);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_BEGIN;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int
+Token::compare(const Object& rhs) const
+{
+    int res = super::compare(rhs);
+    if ((res == 0) && rhs.isA(Token))
+    {
+        auto& token = utl::cast<Token>(rhs);
+        res = utl::compare(_id, token._id);
+    }
+    return res;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Token::copy(const Object& rhs)
+{
+    // if rhs is a Token
+    if (rhs.isA(Token))
+    {
+        auto& token = utl::cast<Token>(rhs);
+        super::copy(token);
+        _id = token._id;
+        _lineNo = token._lineNo;
+        _colNo = token._colNo;
+    }
+    else
+    {
+        super::copy(rhs);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Token::steal(Object& rhs)
+{
+    auto& rhsToken = utl::cast<Token>(rhs);
+    super::steal(rhsToken);
+    _id = rhsToken._id;
+    _lineNo = rhsToken._lineNo;
+    _colNo = rhsToken._colNo;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+UTL_NS_END;

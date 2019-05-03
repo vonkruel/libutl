@@ -1,0 +1,16 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# git pull needed?
+GIT_STATUS=$("${PACKAGE_PREFIX}-git-status")
+if [ ${GIT_STATUS} == "behind" ]; then
+  # fresh build
+  cd "${SOURCE_DIR}"
+  git pull origin
+  "${PACKAGE_PREFIX}-build-init"
+else
+  # normal build
+  "${PACKAGE_PREFIX}-build"
+fi

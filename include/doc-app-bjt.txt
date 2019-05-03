@@ -1,0 +1,114 @@
+/**
+   \page app_bjt BlackJack Trainer
+
+   \section app_bjt_introduction Introduction
+
+   \b bjt is a text-mode Blackjack game that is designed to help you become
+   a better player.  It can make recommendations to you ("hit", "stand",
+   etc.), and it also keep win/lose statistics for when you choose the
+   recommended action and when you don't.  The recommended actions may not
+   always be intuitively obvious, so I thought it would be a good idea to
+   keep the statistics as a way of proving that you are actually better off
+   with the recommended actions.  The more hands you play, the more you will
+   find that the recommended actions are actually better than your "gut
+   instincts".
+
+   \section app_bjt_rules Game Parameters
+
+   The game parameters are:
+
+   \arg 6 decks
+   \arg dealer stands on all 17s
+   \arg splitting allowed (once)
+   \arg double any 2 cards
+   \arg double after split allowed
+   \arg no insurance
+   \arg no surrender
+
+   \section app_bjt_recommended_actions Recommended Actions
+
+   Others have done probability analysis to determine the recommended
+   course of action in each situation, given the above game parameters.
+   The recommended actions are summarized in the following tables.
+
+   Note:
+
+   \arg Soft totals include an Ace (which can count as 1 or 11)
+   \arg Hard totals do not include an Ace
+   \arg \b H means hit
+   \arg \b D means double down if allowed, otherwise hit
+   \arg \b S means stand
+   \arg \b Ds means double-down if allowed, otherwise stand
+
+   \code
+   === Pair Splitting ================================
+
+   Split when the following patterns match:
+
+   You   : Dealer
+   ---------------------------
+   A,A   : *
+   8.8   : *
+   2,2   : 2-7
+   3,3   : 2-7
+   7,7   : 2-7
+   6,6   : 2-6
+   9,9   : 2-6
+   4,4   : 5-6
+   9,9   : 8-9
+
+   === Soft Totals ===================================
+
+   You   : Dealer : Action
+   -----------------------
+   A,9   : *      : S
+   A,8   : *      : S
+   A,7   : 2      : S
+         : 3-6    : Ds
+         : 7-8    : S
+   A,6   : 3-6    : D
+   A,5   : 4-6    : D
+   A,4   : 4-6    : D
+   A,3   : 5-6    : D
+   A,2   : 5-6    : D
+
+   === Soft Totals ===================================
+
+   Default action is "Hit".
+
+   You   : Dealer : Action
+   -----------------------
+   A,9   : *      : S
+   A,8   : *      : S
+   A,7   : 2      : S
+         : 3-6    : Ds
+         : 7-8    : S
+   A,6   : 3-6    : D
+   A,5   : 4-6    : D
+   A,4   : 4-6    : D
+   A,3   : 5-6    : D
+   A,2   : 5-6    : D
+
+   === Hard Totals ===================================
+
+   Default action is "Hit".
+
+   You   : Dealer : Action
+   -----------------------
+   17    : *      : S
+   13-16 : <= 6   : S
+   12    : 4-6    : S
+   11    : < A    : D
+   10    : < T    : D
+   9     : 3-6    : D
+   2-8   : *      : H
+   \endcode
+
+   \section app_bjt_instructions Instructions
+
+   The key commands are shown when you start the game.  Start it up and
+   become a Blackjack expert !   If you follow the tables the house will
+   only have a very slight edge against you (about 0.44%).  After you've got
+   the tables down pat, it's time for the next step: simple forms of card
+   counting!  Card counting is the only way to turn the odds in your favour.
+*/

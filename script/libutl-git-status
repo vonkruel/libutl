@@ -1,0 +1,28 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# upstream ref (optional argument)
+UPSTREAM=${1:-'origin'}
+
+# print our git status
+cd "${SOURCE_DIR}"
+git fetch ${UPSTREAM} >&/dev/null
+LOCAL=$(git rev-parse @)
+REMOTE=$(git rev-parse @{u})
+BASE=$(git merge-base @ @{u})
+
+if [ $LOCAL == $REMOTE ]; then
+  >&2 echo "up-to-date"
+  exit 0
+elif [ $LOCAL == $BASE ]; then
+  >&2 echo "behind"
+  exit 1
+elif [ $REMOTE == $BASE ]; then
+  >&2 echo "ahead"
+  exit 2
+else
+  >&2 echo "diverged"
+  exit 3
+fi

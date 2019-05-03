@@ -1,0 +1,24 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# argument: config-name (lowercase)
+if [ "$1" == "" ]; then
+  echo usage: $0 '<config-name>'
+  exit 1
+fi
+CONFIG=$1
+CONFIG=$(echo $CONFIG | tr '[:upper:]' '[:lower:]')
+
+# build targets in the selected configuration
+if [ `uname -o` == 'Msys' ]; then
+  BUILD_DIR=${SOURCE_DIR}/build
+  cd "${BUILD_DIR}"
+  msbuild.exe *.sln /property:configuration=${CONFIG} /target:install
+else
+  NUM_CPUS=$(grep -c ^processor /proc/cpuinfo)
+  BUILD_DIR=${SOURCE_DIR}/build/${CONFIG}
+  cd "${BUILD_DIR}"
+  sudo make -j ${NUM_CPUS} install
+fi

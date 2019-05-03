@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# build our configurations
+for CONFIG in debug release; do
+  "${PACKAGE_PREFIX}-build-config" ${CONFIG}
+done

@@ -1,0 +1,12 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# invoke the correct version for this host OS
+INSTALL_DEPS=${SCRIPT_DIR}/${PACKAGE_NAME}-install-deps
+if [ `uname -o` == 'Msys' ]; then
+  "${INSTALL_DEPS}-windows"
+else
+  "${INSTALL_DEPS}-linux"
+fi

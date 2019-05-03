@@ -1,0 +1,7 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# clean our configurations
+rm -rf "${SOURCE_DIR}/build"

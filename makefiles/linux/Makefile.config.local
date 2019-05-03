@@ -1,0 +1,5 @@
+# use LTO for a 64-bit release build
+ifeq ($(CONFIG), RELEASE64)
+    CONFIG_CC_SWITCHES += -flto
+    CONFIG_LD_OPTS = $(CONFIG_CC_SWITCHES) -flto-partition=none
+endif

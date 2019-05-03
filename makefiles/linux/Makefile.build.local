@@ -1,0 +1,2 @@
+CC_SWITCHES     = $(CC_SWITCHES_COMMON)
+EXT_LIBS	+= -lm -lpthread -lssl -lcrypto

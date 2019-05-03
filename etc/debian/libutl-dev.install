@@ -1,0 +1,10 @@
+usr/include/libutl/*.h
+usr/include/libutl/*.hpp
+usr/lib/libutl.a
+usr/lib/libutl_g.a
+usr/lib/libutl_g.so
+usr/lib/libutl_g.so.1
+usr/lib/libutl_gr.a
+usr/lib/libutl_gr.so
+usr/lib/libutl_gr.so.1
+usr/share/libutl/*

@@ -1,0 +1,216 @@
+####################################################################################################
+### libUTL++ top-level Makefile ####################################################################
+####################################################################################################
+
+PACKAGE			= libutl
+VERSION			= 1.1.6
+PACKAGES		= ubc ucc ucm udb udc ugt uio uma uoi ust utm uts
+ALL_LIBS		= $(LIBUTL_SHARED) $(LIBUTL_STATIC)
+LIB_OBJS		= $(addsuffix /*.o, $(PACKAGES))
+
+####################################################################################################
+
+INST_SHAREDIR		= $(INST_ROOT)share/$(PACKAGE)/
+INST_DOCDIR		= $(INST_SHAREDIR)../doc/libutl/html/
+INST_HDRDIR		= $(INST_ROOT)include/$(PACKAGE)/
+INST_LIBDIR		= $(INST_ROOT)lib/
+
+####################################################################################################
+
+all:		libs apps docs
+
+####################################################################################################
+
+include $(SRCROOT)/makefiles/Makefile.build
+
+####################################################################################################
+
+CPPS			= $(wildcard */*.cpp)
+HDRS			= $(wildcard libutl/*.h)
+HDRS_DOCS		= $(wildcard include/*.h)
+
+####################################################################################################
+
+dcdl:
+	@$(MAKE) dcd
+	@$(MAKE) libs
+
+####################################################################################################
+
+dcdi:
+	@$(MAKE) dcd
+	@$(MAKE) install
+
+####################################################################################################
+
+dcdil:
+	@$(MAKE) dcd
+	@$(MAKE) install-libs
+
+####################################################################################################
+
+dcdo:
+	@$(MAKE) dcd
+	@$(MAKE) objs
+
+####################################################################################################
+
+docs:		.docs
+
+####################################################################################################
+
+.docs:		$(HDRS) $(HDRS_DOCS) etc/doxygen.cfg
+	@etc/make-docs
+	@touch .docs
+
+####################################################################################################
+
+install:
+	@$(MAKE) install-headers
+	@$(MAKE) install-libs
+
+####################################################################################################
+
+install-apps:
+	@install -d $(INST_SHAREDIR)
+	@rm -rf $(INST_SHAREDIR)apps
+	@cp -Rdpv apps $(INST_SHAREDIR)apps
+
+####################################################################################################
+
+install-dist:
+	@$(MAKE) install-makefiles
+	@$(MAKE) install-apps
+	@$(MAKE) install-examples
+	@$(MAKE) install-docs
+	@$(MAKE) CONFIG=RELEASE dcdi
+	@$(MAKE) CONFIG=DEBUG dcdil
+	@$(MAKE) CONFIG=DEBUG_RELEASE dcdil
+	@$(MAKE) distclean
+
+####################################################################################################
+
+install-docs: .docs
+	@rm -rf $(INST_DOCDIR)
+	@if [ -d doc ]; then \
+	    cd doc ; \
+	    install -d $(INST_DOCDIR) ; \
+	    cp -Rdpv * $(INST_DOCDIR) ; \
+	fi
+
+####################################################################################################
+
+install-docs-web:	.docs
+	@rm -rf /home/adam/public_html/projects/libutl/doc
+	@cp -Rdpv doc /home/adam/public_html/projects/libutl
+
+####################################################################################################
+
+install-examples:
+	@install -d $(INST_SHAREDIR)
+	@rm -rf $(INST_SHAREDIR)examples
+	@cp -Rdpv examples $(INST_SHAREDIR)examples
+
+####################################################################################################
+
+install-headers:
+	@rm -rf $(INST_HDRDIR)
+	@install -d $(INST_HDRDIR)
+	@cp -v libutl/*.{h,hpp} $(INST_HDRDIR)
+
+####################################################################################################
+
+install-libs: libs
+	@$(MAKE) install-lib-shared
+	@$(MAKE) install-lib-static
+
+####################################################################################################
+
+install-lib-shared:	$(LIBUTL_SHARED)
+ifeq ($(HOST_OS_NAME), mingw)
+	@install -d $(INST_LIBDIR)
+	@rm -f $(INST_LIBDIR)$(LIBUTL_SHARED)
+	@cp -v $(LIBUTL_SHARED) $(INST_LIBDIR)
+	@chmod 755 $(INST_LIBDIR)$(LIBUTL_SHARED)
+	@if [ $(CONFIG) = RELEASE ]; then \
+	    $(STRIP) --strip-unneeded $(INST_LIBDIR)$(LIBUTL_SHARED) ; \
+	fi
+else
+	@install -d $(INST_LIBDIR)
+	@rm -f $(INST_LIBDIR)$(LIBUTL_SHARED)
+	@rm -f $(INST_LIBDIR)$(LIBUTL_SHARED_LINK)
+	@cp -v $(LIBUTL_SHARED) $(INST_LIBDIR)
+	@chmod 644 $(INST_LIBDIR)$(LIBUTL_SHARED)
+	@if [ $(CONFIG) = RELEASE ]; then \
+	    $(STRIP) --strip-unneeded $(INST_LIBDIR)$(LIBUTL_SHARED) ; \
+	fi
+	@ln -sf $(LIBUTL_SHARED) $(INST_LIBDIR)$(LIBUTL_SHARED_LINK)
+endif
+
+####################################################################################################
+## strip --strip-unneeded complained about missing plugin when using LTO
+##       (so we only do it on MINGW where we don't use LTO)
+
+install-lib-static:	$(LIBUTL_STATIC)
+	@install -d $(INST_LIBDIR)
+	@rm -f $(INST_LIBDIR)$(LIBUTL_STATIC)
+	@cp -v $(LIBUTL_STATIC) $(INST_LIBDIR)
+	@chmod 644 $(INST_LIBDIR)$(LIBUTL_STATIC)
+ifeq ($(HOST_OS_NAME), mingw)
+	@if [ $(CONFIG) = RELEASE ]; then \
+	    $(STRIP) --strip-unneeded $(INST_LIBDIR)$(LIBUTL_STATIC) ; \
+	fi
+endif
+
+####################################################################################################
+
+install-makefiles:
+	@install -d $(INST_SHAREDIR)
+	@rm -rf $(INST_SHAREDIR)/makefiles
+	@cp -RLp makefiles $(INST_SHAREDIR)
+
+####################################################################################################
+
+libs:	$(ALL_LIBS)
+
+####################################################################################################
+
+lib-shared:		$(LIBUTL_SHARED)
+
+$(LIBUTL_SHARED):	.objs
+	@echo creating $@
+	@rm -f $@
+ifeq ($(HOST_OS_NAME), mingw)
+	@$(LD) -shared $(CONFIG_LD_OPTS) -o $@ $(LIB_OBJS) $(EXT_LIBS)
+	@chmod 755 $@
+else
+	@+$(LD) -shared $(CONFIG_LD_OPTS) -o $@ -Wl,-soname,$@ $(LIB_OBJS) $(EXT_LIBS)
+	@chmod 644 $@
+endif
+
+####################################################################################################
+
+lib-static:		$(LIBUTL_STATIC)
+
+$(LIBUTL_STATIC):	.objs
+	@echo creating $@
+	@rm -f $@
+	@$(AR) rs $@ $(LIB_OBJS) >/dev/null 2>&1
+	@chmod 644 $@
+
+####################################################################################################
+
+spotless:	distclean
+	@rm -rf doc/
+
+####################################################################################################
+
+objs:		.objs
+
+.objs:		$(HDRS) $(CPPS)
+	@for dir in $(PACKAGES); do \
+		cd $${dir} ; \
+                $(MAKE) || exit 1 ; \
+                cd .. ; \
+	done
+	@touch .objs

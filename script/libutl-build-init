@@ -1,0 +1,10 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# re-initialize build/
+"${PACKAGE_PREFIX}-build-system-init"
+
+# build
+"${PACKAGE_PREFIX}-build"

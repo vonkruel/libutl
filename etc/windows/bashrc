@@ -1,0 +1,16 @@
+alias d='ls -al'
+export BIN_DIR=~/bin/
+export SOURCE_ROOT=~/source/
+export UTL_SOURCE_DIR=${SOURCE_ROOT}libutl
+export CSE_SOURCE_DIR=${SOURCE_ROOT}clevor_se
+
+export PATH=${PATH}:${UTL_SOURCE_DIR}/script:${CSE_SOURCE_DIR}/script
+
+alias cd-bin='cd "${BIN_DIR}"'
+alias cd-utl='cd "${UTL_SOURCE_DIR}"'
+alias cd-cse='cd "${CSE_SOURCE_DIR}"'
+
+function forever()
+{
+    while [ 1 ]; do "$@"; sleep 5; done
+}

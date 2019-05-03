@@ -1,0 +1,9 @@
+Document: libutl
+Title: libUTL++ Source Manual
+Author: Adam McKee
+Abstract: Reference manual for the libUTL++ class library.
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/libutl/html/index.html
+Files: /usr/share/doc/libutl/html/*.html

@@ -1,0 +1,64 @@
+#include "Customer.h"
+
+///////////////////////////////////////////////////////////////////////////////
+
+UTL_CLASS_IMPL(Customer);
+
+///////////////////////////////////////////////////////////////////////////////
+
+int
+Customer::compare(const Object& rhs) const
+{
+    int res;
+    if (rhs.isA(Customer))
+    {
+        const Customer& customer = (const Customer&)rhs;
+        res = _id.compare(customer._id);
+        if (res != 0) return res;
+        res = _name.compare(customer._name);
+    }
+    else
+    {
+        res = Object::compare(rhs);
+    }
+    return res;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Customer::copy(const Object& rhs)
+{
+    ASSERTD(rhs.isA(Customer));
+    // copy rhs's members
+    const Customer& customer = (const Customer&)rhs;
+    _id = customer._id;
+    _name = customer._name;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Customer::dump(Stream& os, uint_t) const
+{
+    os << "id: " << _id.toString() << endl;
+    os << "name: " << _name.toString() << endl;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void
+Customer::serialize(Stream& stream, uint_t io, uint_t mode)
+{
+    Object::serialize(stream, io, mode);
+    _id.serialize(stream, io, mode);
+    _name.serialize(stream, io, mode);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+String
+Customer::toString() const
+{
+    return "{ id: " + _id.toString() + ", name: " + _name + " }";
+}

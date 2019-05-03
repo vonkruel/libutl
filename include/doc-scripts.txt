@@ -1,0 +1,49 @@
+/**
+   \page libutl-scripts Shell Scripts
+
+   A set of shell scripts to automate some common tasks for developers.
+
+   Script                    | Action
+   ------------------------- | -----------------------------------------------------------------------
+   build                     | Perform a normal build (all configurations).
+   build-config `<config>`   | Perform a normal build (named configuration).
+   build-docs                | Build source documentation.
+   build-init                | Equivalent to `build-system-init` then `build`.
+   build-system-init         | Remove and re-create the build system(s).
+   build-update              | If our working tree is based on old code, `git pull` and re-build.
+   clean                     | Build the `clean` target (all configurations).
+   clean-config `<config>`   | Build the `clean` target (named configuration).
+   distclean                 | Remove build trees (all configurations).
+   git-status                | Determine how the local `HEAD` commit relates to the `origin` remote's.
+   install                   | Install locally (all configurations).
+   install-config `<config>` | Install the named configuration locally.
+   install-deps              | Install additional required software (CMake, Doxygen, etc.)
+
+   ## Using scripts in your project
+
+   Create a `script/` directory in the root of your project, then create symlinks to the files
+   in libUTL's `script/` directory, substituting a unique prefix for your own project in the
+   link name.
+
+   For example if your project is called 'foo':
+
+   \code
+   % cd ~/src/foo
+   % mkdir build
+   % cd build
+   % ln -s ../../libutl/build/init.sh .
+   % ln -s ../../libutl/build/require-admin.sh .
+   % ln -s ../../libutl/libutl-build foo-build
+   % ln -s ../../libutl-build-config foo-build-config
+   ... etc
+   \endcode
+
+   ## Recursive operation
+
+   To request recursive operation, use the `-r` switch as the first argument when invoking
+   a script.  In recursive operation, each script will invoke its counterpart in the required
+   source package(s) (forwarding the `-r` switch) before acting on its own project.  To enable
+   this to work, the file `etc/packages-required` contains a space-delimited list of paths
+   for required packages (relative to your source root).  This file is consulted during
+   recursive execution to locate the source trees that should be acted upon.
+*/

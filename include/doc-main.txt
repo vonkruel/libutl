@@ -1,0 +1,382 @@
+#pragma once
+
+/**
+   \mainpage
+
+   \section introduction 1. Introduction
+
+   libUTL++ is a home for code that I've reused across C++ projects.  I've shared the library
+   under the <a href="https://opensource.org/licenses/MIT">MIT License</a> to enable others to
+   build and run my C++ projects.
+
+   Here's a brief (incomplete) overview:
+
+   <ul>
+   <li> utl::Object is the abstract root class of libUTL++ with support for:
+       <ul>
+           <li> copying, cloning, moving
+           <li> comparison
+           <li> serialization
+           <li> \ref isA() (more readable than equivalent <code>dynamic_cast<></code>)
+           <li> <code>super::</code> (unfortunately missing from C++)
+       </ul>
+   <li> streams framework:
+       <ul>
+           <li> utl::Stream is a base class for I/O streams
+           <li> utl::BufferedStream provides buffering for a utl::Stream
+           <li> utl::FileStream, utl::BufferedFileStream for file I/O
+           <li> utl::MemStream for streaming to/from a memory buffer
+           <li> utl::Encoder is a base class for encoders (and decoders)
+           <li> utl::Base64encoder encodes to/from base64
+           <li> utl::CRC32, utl::MD5, utl::SHA256 hash algorithms
+       </ul>
+   <li> containers, iterators, and algorithms:
+       <ul>
+           <li> concurrent queues: utl::ConcurrentQueue, utl::RingBuffer
+           <li> utl::Collection is an abstract base for containers
+           <li> utl::SortedCollection is an abstract base for sortable containers
+           <li> sorted/sortable containers: utl::Array, utl::Deque, utl::List, utl::RBtree,
+                                            utl::SkipList
+           <li> unsorted containers: utl::Hashtable, utl::Heap
+           <li> a key->value map for strings: utl::StringVars
+           <li> iterators are STL-compatible
+                (useable with range-based <code>for</code> and <code>\<algorithms\></code>)
+           <li> various iterator-based algorithms for searching, sorting, comparing, etc.
+                (many of these only work with utl::FwdIt-based iterators)
+       </ul>
+   <li> data compression, including:
+       <ul>
+           <li> adaptive arithmetic encoding (utl::ArithmeticEncoder)
+           <li> Burrows-Wheeler Transform (utl::BWTencoder)
+           <li> adaptive Huffman encoding (utl::HuffmanEncoder)
+           <li> Lempel-Ziv (utl::LZencoder)
+           <li> run-length encoding (utl::RLencoder)
+       </ul>
+   <li> networking:
+       <ul>
+           <li> utl::NetServer and utl::NetServerClient provide a basis for a
+                <br>networked server that serves each client in a separate thread
+           <li> utl::FastCGIserver specializes utl::NetServer to provide a basis for
+                <br>a FastCGI responder
+           <li> utl::TCPsocket, utl::BufferedTCPsocket, utl::TCPserverSocket,
+                <br>utl::SSLsocket, utl::BufferedSSLsocket,
+                <br>utl::InetHostAddress, utl::InetHostname
+           <li> utl::HttpRequest, utl::HttpResponse, utl::URI
+           <li> utl::ReCaptcha for verifying ReCaptcha responses (protocol version 2)
+       </ul>
+   <li> string processing: utl::String, utl::BoyerMooreSearch, utl::Regex, utl::BBcodeParser,
+                           utl::RDparser, utl::Tokenizer
+   <li> date/time processing: utl::Time, utl::Duration, utl::TimeSpan
+   <li> a simple 64-bit decimal type: utl::Decimal
+   <li> threads and synchronization:
+       <ul>
+           <li> utl::Thread provides basic threads support (spawning, canceling, joining)
+           <li> synchronization: utl::RWlock, utl::RWlockGuard, utl::RWlockLF, utl::RWlockLFguard,
+                                 <br>utl::Mutex, utl::MutexGuard, utl::Semaphore, utl::ConditionVar
+       </ul>
+   <li> code optimization helpers:
+       <ul>
+           <li>utl::clobber(), utl::escape(): for microbenchmarking
+           <li>\ref likely(), \ref unlikely(): optimize conditionals in performance-critical code
+           <li>utl::PointerIntPair: store an integer value in the unused least significant
+               bits of a pointer-like value
+               <br>(based on a <a href="https://www.youtube.com/watch?v=vElZc6zSIXM">
+               talk by Chandler Carruth</a>)
+       </ul>
+   <li> declarative control flow: \ref SCOPE_EXIT, \ref SCOPE_SUCCESS, \ref SCOPE_FAIL
+        <br>(based on a <a href="https://www.youtube.com/watch?v=WjTrfoiB0MQ">
+        talk by Andrei Alexandrescu</a>)
+   <li> a few other helpful functions such as:
+       <ul>
+           <li> utl::arrayGrow(): grow an allocation
+           <li> utl::cast(): safely cast an object to a utl::Object-derived type
+                (preserves const, also works with pointers)
+           <li> utl::nextPow2(): find the smallest power of 2 >= some value
+           <li> utl::nextMultipleOfPow2(): find the smallest multiple of a power of 2 >= some value
+           <li> utl::reverseBytes(): reverse byte ordering of 16-, 32-, or 64-bit values
+       </ul>
+   </ul>
+
+
+
+   \section license 2. License
+
+   libUTL++ is licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.
+   Make sure you read and understand the license, because it describes your rights in connection
+   with the use, modification, and redistribution of this software.
+
+   libUTL++ also bundles \ref randutils.hpp by Melissa E. O'Neill, which she has shared under the
+   <a href="https://opensource.org/licenses/MIT">MIT License</a>.  <code>randutils</code>
+   <i>"makes good seeding easier, and makes using RNGs easy while retaining all the power".</i>
+   In my own words: Melissa's work builds on top of the standard library's RNG facilities to
+   provide easy access to good RNG.  The STL's RNG facilities only seem "over-engineered" when
+   there is no convenient wrapper for them.  Also, <code>std::random_device</code> can't be
+   depended on to provide a good seed, even though it may seem at first glance to be suitable for
+   that purpose.  There's been some progress toward adoption of <code>randutils</code> into
+   the standard library, so eventually I'll stop bundling it.
+
+   A few links for <code>randutils</code>:
+
+   <ul>
+   <li> <a href="https://gist.github.com/imneme/540829265469e673d045">randutils.hpp on GitHub</a>
+   <li> <a href="http://www.pcg-random.org/posts/ease-of-use-without-loss-of-power.html">"Ease of
+   Use without Loss of Power"</a>
+   <li> RandUtils.h (a short wrapper with a workaround for targets without
+        <code>std::this_thread</code>)
+   <li> randutils.hpp (clang-formatted, and I commented out 2 unused variables)
+   </ul>
+
+   \section supported_platforms 3. Supported Platforms
+
+   Currently Linux and Windows/MinGW amd64 targets are supported, as these are the platforms
+   I've targeted in my projects.  The library should also work for those systems on x86 (32-bit),
+   but I haven't been testing that myself lately.  Not many people care about 32-bit anymore.
+
+
+
+   \section building_libutl 4. Building libUTL++
+
+   \subsection Required_Tools 4.1 Required Software
+
+   You will need the following packages to build the library:
+
+   \arg GNU make
+   \arg GNU binutils
+   \arg GNU g++
+   \arg GNU libstdc++6
+   \arg <a href="http://www.zsh.org">Zsh</a>
+   \arg <a href="http://www.doxygen.org">Doxygen</a>
+   \arg <a href="http://www.graphviz.org">Graphviz</a>
+
+   You need these installed when building for Linux:
+
+   \arg <a href="http://jemalloc.net/">jemalloc</a>
+   \arg <a href="https://www.openssl.org">OpenSSL</a>
+
+   \subsection MinGW_Notes 4.2 MinGW-w64 Build Environment
+
+   The <a href="http://mingw-w64.sourceforge.net/">MinGW-w64</a> project has made it easy to
+   cross-compile for Windows on the Linux platform.  The included build configuration for
+   MinGW-w64 assumes the cross-targeted binutils & g++ compiler are accessible in the system
+   PATH and named with the prefix <code>x86_64-w64-mingw32-</code>.  For example, on my Debian
+   system I installed the package <code>g++-mingw-w64</code>, and the MinGW-targeted g++ is
+   named <code>x86_64-w64-mingw32-g++</code>.
+
+   \subsection Build_Procedure 4.3 Build Procedure
+
+   First, unpack the sources and change into the libUTL++ source root:
+
+   \code
+   % tar xzvf libutl-1.1.x.tar.gz    # unpack sources
+   % cd libutl-1.1.x                 # change into source root directory
+   \endcode
+
+   Next, if you're building on a system other than Linux (such as MinGW), you have to configure
+   the build system for that target by using the \b config shell script located in the
+   \c makefiles directory:
+
+   \code
+   % cd makefiles                    # change into makefiles directory
+   % ./config mingw                  # configure build system for MinGW target
+   % cd ..                           # change back to source root
+   \endcode
+
+   Then build and install libUTL++:
+
+   \code
+   % make install-dist
+   \endcode
+
+   You can use INST_ROOT to override the installation root.  For example:
+
+   \code
+   % make INST_ROOT=/usr/local/ install-dist
+   \endcode
+
+   The build process may take a few minutes. Several versions of the library
+   will be built, including:
+
+   \arg \b \c DEBUG : libutl_g.a, libutl_g.so.1
+        <br>[<i>built with \c -g, enabled runtime assertions and debug new/delete</i>]
+   \arg \b \c DEBUG_RELEASE : libutl_gr.a, libutl_gr.so.1
+        <br>[<i>built with \c -g, disabled runtime assertions and debug new/delete</i>]
+   \arg \b \c RELEASE : libutl.a, libutl.so.1
+        <br>[<i>built with \c -Ofast, disabled runtime assertions and debug new/delete</i>]
+
+
+
+   \section using_libutl 5. Using libUTL++
+
+   To use libUTL++ in your project:
+
+   \arg \c \#include \c <libutl/libutl.h> near the start of your source files
+        <br>(before \c \#include'ing any other header files from libUTL++)
+   \arg call utl::init() when your application starts
+   \arg call utl::deInit() before your application exits
+   \arg link against the appropriate version of the library
+
+   If you subclass utl::Application, it will take care of the utl::init() and utl::deInit()
+   calls for you.
+
+   To learn the library, the best way to get started is to study the bundled applications
+   and example programs (installed in <code>$INST_ROOT/share/libutl/</code>), as well as the
+   documentation (installed in <code>$INST_ROOT/share/doc/libutl-doc/</code>).
+
+
+
+   \section other_libraries 6. Compatibility With Other Libraries
+
+   libUTL++ should be able to happily coexist with other libraries:
+
+   \arg C++ symbols are in the <code>utl</code> namespace
+   \arg <i>most</i> preprocessor symbols are prefixed with <code>UTL_</code>
+
+   One thing to watch for is that in a DEBUG build, libUTL++ overloads the new operator to keep
+   track of active allocations (remembering the source file and line # where they were made).
+   This can be a problem when including some C++ header files.  You can solve it this way:
+
+   \code
+   #undef new
+   #include <some/thing.h>
+   #include <libutl/gblnew_macros.h>
+   \endcode
+
+
+
+   \section links 7. Links
+
+   \arg <a href="http://www.sourceforge.net/projects/libutl/">Summary Page</a>
+   \arg <a href="http://sourceforge.net/tracker/?atid=466864&group_id=52444&func=browse">Browse and
+   Report Bugs</a>
+   \arg <a href="http://sourceforge.net/project/showfiles.php?group_id=52444">Download</a>
+   \arg <a href="http://sourceforge.net/projects/mingw-w64/">MinGW-w64 Project</a>
+   \arg <a href="http://sourceforge.net/projects/mingw-w64/files">MinGW-w64 Downloads</a>
+
+
+
+   \section contact 8. Contact the Author
+
+   You can reach me via e-mail: adam@acmsproject.org
+
+   Please contact me if you've found a bug, or if you have any ideas for improving the library.
+
+
+
+   \htmlonly
+   <p><a href="http://www.sourceforge.net"><img
+   src="http://sourceforge.net/sflogo.php?group_id=52444&type=7" width="210" height="62" border="0"
+   alt="SourceForge.net Logo"></a>
+   \endhtmlonly
+*/
+
+/**
+   \page apps Sample Applications
+
+   A few small applications that use the library.
+
+   <ul>
+   <li> \subpage app_bjt -- Blackjack trainer
+   <li> \subpage app_md5 -- compute md5 sums for files
+   <li> \subpage app_sort -- sort lines of text (like UNIX sort)
+   </ul>
+*/
+
+/**
+   \defgroup abstract Abstract Base Classes
+   \short General-purpose ABCs.
+*/
+
+/**
+   \defgroup algorithm Algorithms
+   \short Generic algorithms.
+*/
+
+/**
+   \defgroup collection Collections
+   \short Collection classes.
+*/
+
+/**
+   \defgroup communication Communications
+   \short Networking and IPC.
+*/
+
+/**
+   \defgroup compression Data Compression
+   \short Lempel-Ziv, BWT, Huffman, etc.
+*/
+
+/**
+   \defgroup database Database
+   \short Database abstraction layer.
+*/
+
+/**
+   \defgroup time Date/Time
+   \short Date/time manipulation.
+*/
+
+/**
+   \defgroup exception Exceptions
+   \short Exception classes.
+*/
+
+/**
+   \defgroup graph Graphs
+   \short Graphs and associated algorithms.
+*/
+
+/**
+   \defgroup general General
+   \short General-purpose classes.
+*/
+
+/**
+   \defgroup hostos Host OS
+   \short Portable access to host OS functionality.
+*/
+
+/**
+   \defgroup iterator Iterators
+   \short Iterator abstractions.
+*/
+
+/**
+   \defgroup io I/O Streams
+   \short Streams and other I/O abstractions.
+*/
+
+/**
+   \defgroup macros Macros
+   \short Various preprocessor macros.
+*/
+
+/**
+   \defgroup math Math
+   \short Mathematics.
+*/
+
+/**
+   \defgroup predicate Predicates
+   \short Predicate classes.
+*/
+
+/**
+   \defgroup reflection Reflection
+   \short A simple reflection system.
+*/
+
+/**
+   \defgroup string String Processing
+   \short String processing and pattern matching.
+*/
+
+/**
+   \defgroup threads Threads and Synchronization
+   \short Threads and synchronization primitives.
+*/
+
+/**
+   \defgroup utility Utility
+   \short Various general-purpose functions.
+*/

@@ -1,0 +1,14 @@
+#! /bin/bash
+
+# initialize
+. $(dirname "$0")/init.sh
+
+# require admin
+. ${SCRIPT_DIR}/require-admin.sh
+
+# CMake: install/upgrade (and update the system PATH for it)
+choco upgrade cmake.install --installargs '"ADD_CMAKE_TO_PATH=System"'
+
+# Doxygen and Graphviz: install/upgrade
+choco upgrade doxygen.install
+choco upgrade Graphviz
