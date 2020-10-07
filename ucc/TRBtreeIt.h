@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TRBtreeIt : public BinTreeIt
+template <class T>
+class TRBtreeIt : public BinTreeIt
 {
     UTL_CLASS_DECL_TPL(TRBtreeIt, T, BinTreeIt);
     UTL_CLASS_DEFID;

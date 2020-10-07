@@ -15,7 +15,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class TFwdIt final : public FwdIt
+template <class T = Object>
+class TFwdIt final : public FwdIt
 {
     UTL_CLASS_DECL_TPL(TFwdIt, T, FwdIt);
 

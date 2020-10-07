@@ -621,7 +621,8 @@ comparisonResultMatchesOp(int cmpRes, uint_t cmpOp)
    \return newly created copy (nullptr if object == nullptr)
    \param ordering (optional) ordering (\em not cloned)
 */
-template <typename T> struct comparisonFunctor
+template <typename T>
+struct comparisonFunctor
 {
     comparisonFunctor(const Ordering* ordering = nullptr)
         : _ordering(ordering)
@@ -647,7 +648,8 @@ private:
    \return newly created copy (nullptr if object == nullptr)
    \param ordering (optional) ordering (\em not cloned)
 */
-template <typename T = utl::Object> struct equals
+template <typename T = utl::Object>
+struct equals
 {
     equals(const Ordering* ordering = nullptr)
         : _ordering(ordering)
@@ -673,7 +675,8 @@ private:
    \return newly created copy (nullptr if object == nullptr)
    \param ordering (optional) ordering (\em not cloned)
 */
-template <typename T = utl::Object> struct lessThan
+template <typename T = utl::Object>
+struct lessThan
 {
     lessThan(const Ordering* ordering = nullptr)
         : _ordering(ordering)

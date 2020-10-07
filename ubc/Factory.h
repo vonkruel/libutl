@@ -48,7 +48,8 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TFactory : public Factory
+template <class T>
+class TFactory : public Factory
 {
     UTL_CLASS_DECL_TPL(TFactory, T, Factory);
     UTL_CLASS_DEFID;

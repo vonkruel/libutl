@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class Integer : public Number<T>
+template <class T>
+class Integer : public Number<T>
 {
     UTL_CLASS_DECL_TPL(Integer, T, Number<T>);
     UTL_CLASS_DEFID;

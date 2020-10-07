@@ -20,7 +20,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Semaphore : public Object, public NamedObjectMI
+class Semaphore
+    : public Object
+    , public NamedObjectMI
 {
     UTL_CLASS_DECL(Semaphore, Object);
     UTL_CLASS_NO_COPY;

@@ -117,7 +117,9 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class TokenizerTokens : public Object, protected FlagsMI
+class TokenizerTokens
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(TokenizerTokens, Object);
     UTL_CLASS_DEFID;

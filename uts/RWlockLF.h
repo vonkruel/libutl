@@ -32,7 +32,9 @@ class Mutex;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class RWlockLF : public Object, public NamedObjectMI
+class RWlockLF
+    : public Object
+    , public NamedObjectMI
 {
     UTL_CLASS_DECL(RWlockLF, Object);
     UTL_CLASS_NO_COPY;

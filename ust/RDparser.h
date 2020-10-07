@@ -100,7 +100,9 @@ class Terminal;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class RDparser : public Object, protected FlagsMI
+class RDparser
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(RDparser, Object);
 

@@ -10,7 +10,8 @@ UTL_NS_BEGIN;
    Abstraction for binary functions.
    \ingroup algorithm
 */
-template <class Arg1, class Arg2, class Result> struct binaryFunction
+template <class Arg1, class Arg2, class Result>
+struct binaryFunction
 {
     typedef Arg1 arg1_t;
     typedef Arg2 arg2_t;
@@ -23,7 +24,8 @@ template <class Arg1, class Arg2, class Result> struct binaryFunction
    Subtraction function.
    \ingroup algorithm
 */
-template <class T> struct subtract : public binaryFunction<T, T, T>
+template <class T>
+struct subtract : public binaryFunction<T, T, T>
 {
     /**
        Return the result of (lhs - rhs).
@@ -44,7 +46,8 @@ template <class T> struct subtract : public binaryFunction<T, T, T>
    Reverse subtraction function.
    \ingroup algorithm
 */
-template <class T> struct subtractReverse : public binaryFunction<T, T, T>
+template <class T>
+struct subtractReverse : public binaryFunction<T, T, T>
 {
     /**
        Return the result of (rhs - lhs).

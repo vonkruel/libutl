@@ -37,7 +37,9 @@ class LogStream;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class LogMgr : public Object, protected FlagsMI
+class LogMgr
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(LogMgr, Object);
 

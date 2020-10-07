@@ -413,7 +413,8 @@ extern const int64_t int64_t_max;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> struct Printf
+template <typename T>
+struct Printf
 {
     static const char* formatType;
     static const char* formatLength;

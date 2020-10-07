@@ -652,6 +652,23 @@ String::replace(const String& lhs, const String& rhs)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 String&
+String::replace(char lhs, char rhs)
+{
+    auto myLen = length();
+    auto lim = _s + myLen;
+    for (auto ptr = _s; ptr != lim; ++ptr)
+    {
+        if (*ptr == lhs)
+        {
+            *ptr = rhs;
+        }
+    }
+    return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+String&
 String::replace(size_t begin, size_t len, const String& str)
 {
     // set bounds

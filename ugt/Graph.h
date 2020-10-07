@@ -33,7 +33,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Graph : public TCollection<Vertex>, protected FlagsMI
+class Graph
+    : public TCollection<Vertex>
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(Graph, TCollection<Vertex>);
 

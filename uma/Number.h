@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class Number : public Object
+template <class T>
+class Number : public Object
 {
     UTL_CLASS_DECL_TPL(Number, T, Object);
 

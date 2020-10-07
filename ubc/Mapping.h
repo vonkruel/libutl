@@ -25,7 +25,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Mapping : public Object, protected FlagsMI
+class Mapping
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_ABC(Mapping, Object);
     UTL_CLASS_DEFID;

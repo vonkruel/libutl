@@ -22,7 +22,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Pair : public Object, protected FlagsMI
+class Pair
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(Pair, Object);
 

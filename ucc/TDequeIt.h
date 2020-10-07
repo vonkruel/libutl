@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TDequeIt : public DequeIt
+template <class T>
+class TDequeIt : public DequeIt
 {
     UTL_CLASS_DECL_TPL(TDequeIt, T, DequeIt);
     UTL_CLASS_DEFID;

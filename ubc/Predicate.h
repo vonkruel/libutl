@@ -23,7 +23,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Predicate : public Object, protected FlagsMI
+class Predicate
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_ABC(Predicate, Object);
     UTL_CLASS_DEFID;

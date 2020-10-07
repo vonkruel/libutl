@@ -28,7 +28,10 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Thread : public Object, public NamedObjectMI, protected FlagsMI
+class Thread
+    : public Object
+    , public NamedObjectMI
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_ABC(Thread, Object);
     UTL_CLASS_NO_COPY;

@@ -76,58 +76,80 @@ const int64_t int64_t_max = (int64_t)0x7fffffffffffffffLL;
 /// Printf /////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<byte_t>::formatType = "c";
-template <> const char* Printf<byte_t>::formatLength = "hh";
+template <>
+const char* Printf<byte_t>::formatType = "c";
+template <>
+const char* Printf<byte_t>::formatLength = "hh";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<char_t>::formatType = "c";
-template <> const char* Printf<char_t>::formatLength = "hh";
+template <>
+const char* Printf<char_t>::formatType = "c";
+template <>
+const char* Printf<char_t>::formatLength = "hh";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<char>::formatType = "c";
-template <> const char* Printf<char>::formatLength = "hh";
+template <>
+const char* Printf<char>::formatType = "c";
+template <>
+const char* Printf<char>::formatLength = "hh";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<char*>::formatType = "s";
-template <> const char* Printf<char*>::formatLength = "";
+template <>
+const char* Printf<char*>::formatType = "s";
+template <>
+const char* Printf<char*>::formatLength = "";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<ushort_t>::formatType = "hu";
-template <> const char* Printf<ushort_t>::formatLength = "h";
+template <>
+const char* Printf<ushort_t>::formatType = "hu";
+template <>
+const char* Printf<ushort_t>::formatLength = "h";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<short_t>::formatType = "hd";
-template <> const char* Printf<short_t>::formatLength = "h";
+template <>
+const char* Printf<short_t>::formatType = "hd";
+template <>
+const char* Printf<short_t>::formatLength = "h";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<uint_t>::formatType = "u";
-template <> const char* Printf<uint_t>::formatLength = "";
+template <>
+const char* Printf<uint_t>::formatType = "u";
+template <>
+const char* Printf<uint_t>::formatLength = "";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<int_t>::formatType = "d";
-template <> const char* Printf<int_t>::formatLength = "";
+template <>
+const char* Printf<int_t>::formatType = "d";
+template <>
+const char* Printf<int_t>::formatLength = "";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<ulong_t>::formatType = "lu";
-template <> const char* Printf<ulong_t>::formatLength = "l";
+template <>
+const char* Printf<ulong_t>::formatType = "lu";
+template <>
+const char* Printf<ulong_t>::formatLength = "l";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<long_t>::formatType = "ld";
-template <> const char* Printf<long_t>::formatLength = "l";
+template <>
+const char* Printf<long_t>::formatType = "ld";
+template <>
+const char* Printf<long_t>::formatLength = "l";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<double>::formatType = "f";
-template <> const char* Printf<double>::formatLength = "";
+template <>
+const char* Printf<double>::formatType = "f";
+template <>
+const char* Printf<double>::formatLength = "";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,23 +157,31 @@ template <> const char* Printf<double>::formatLength = "";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<uint64_t>::formatType = "llu";
-template <> const char* Printf<uint64_t>::formatLength = "ll";
+template <>
+const char* Printf<uint64_t>::formatType = "llu";
+template <>
+const char* Printf<uint64_t>::formatLength = "ll";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<int64_t>::formatType = "lld";
-template <> const char* Printf<int64_t>::formatLength = "ll";
+template <>
+const char* Printf<int64_t>::formatType = "lld";
+template <>
+const char* Printf<int64_t>::formatLength = "ll";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<void*>::formatType = "x";
-template <> const char* Printf<void*>::formatLength = "ll";
+template <>
+const char* Printf<void*>::formatType = "x";
+template <>
+const char* Printf<void*>::formatLength = "ll";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<byte_t*>::formatType = "x";
-template <> const char* Printf<byte_t*>::formatLength = "ll";
+template <>
+const char* Printf<byte_t*>::formatType = "x";
+template <>
+const char* Printf<byte_t*>::formatLength = "ll";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -159,13 +189,17 @@ template <> const char* Printf<byte_t*>::formatLength = "ll";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<void*>::formatType = "x";
-template <> const char* Printf<void*>::formatLength = "l";
+template <>
+const char* Printf<void*>::formatType = "x";
+template <>
+const char* Printf<void*>::formatLength = "l";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <> const char* Printf<byte_t*>::formatType = "x";
-template <> const char* Printf<byte_t*>::formatLength = "l";
+template <>
+const char* Printf<byte_t*>::formatType = "x";
+template <>
+const char* Printf<byte_t*>::formatLength = "l";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

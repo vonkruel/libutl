@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class THashtableIt : public HashtableIt
+template <class T>
+class THashtableIt : public HashtableIt
 {
     UTL_CLASS_DECL_TPL(THashtableIt, T, HashtableIt);
     UTL_CLASS_DEFID;

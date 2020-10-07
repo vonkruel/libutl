@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TSkipList : public SkipList
+template <class T>
+class TSkipList : public SkipList
 {
     UTL_CLASS_DECL_TPL(TSkipList, T, SkipList);
     UTL_CLASS_DEFID;

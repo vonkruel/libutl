@@ -2,11 +2,19 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#undef new
+#include <filesystem>
+#include <libutl/gblnew_macros.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <libutl/String.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 UTL_NS_BEGIN;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
    Filesystem pathname.
@@ -52,6 +60,21 @@ public:
         : String(pathname)
     {
     }
+
+    /**
+       Constructor.
+       \param pathname path
+    */
+    Pathname(const std::filesystem::path& pathname);
+
+    /** Convert to `std::filesystem::path`. */
+    std::filesystem::path fs_path() const;
+
+    /** Convert to `std::filesystem::path`. */
+    operator std::filesystem::path() const;
+
+    /** Convert to native pathname string. */
+    String native() const;
 
     /** Get the directory. */
     Pathname directory() const;
@@ -108,13 +131,12 @@ public:
 
     /**
        Remove any trailing separator from the path.
-       \see HostOS::getPathSeparator
     */
     void removeTrailingSeparator();
 
     /**
-       Normalize the path by getting rid of extra separators.
-       For example: "/foo//bar///foobar.txt" -> "/foo/bar/foobar.txt"
+       Normalize the path by removing extra separators and pointless round trips.
+       For example: "/foo//bar///..//foobar.txt" -> "/foo/foobar.txt"
     */
     void normalize();
 
@@ -122,10 +144,11 @@ public:
     static void utl_init();
 
 public:
-#if UTL_HOST_TYPE == UTL_HT_UNIX
     constexpr static char separator = '/';
+#if UTL_HOST_TYPE == UTL_HT_UNIX
+    constexpr static char native_separator = '/';
 #else
-    constexpr static char separator = '\\';
+    constexpr static char native_separator = '\\';
 #endif
 };
 

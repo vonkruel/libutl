@@ -245,18 +245,21 @@ private:
 
     std::array<IntRep, count> mixer_;
 
-    template <typename InputIter> void mix_entropy(InputIter begin, InputIter end);
+    template <typename InputIter>
+    void mix_entropy(InputIter begin, InputIter end);
 
 public:
     seed_seq_fe(const seed_seq_fe&) = delete;
     void operator=(const seed_seq_fe&) = delete;
 
-    template <typename T> seed_seq_fe(std::initializer_list<T> init)
+    template <typename T>
+    seed_seq_fe(std::initializer_list<T> init)
     {
         seed(init.begin(), init.end());
     }
 
-    template <typename InputIter> seed_seq_fe(InputIter begin, InputIter end)
+    template <typename InputIter>
+    seed_seq_fe(InputIter begin, InputIter end)
     {
         seed(begin, end);
     }
@@ -271,7 +274,8 @@ public:
         return count;
     }
 
-    template <typename OutputIterator> void param(OutputIterator dest) const;
+    template <typename OutputIterator>
+    void param(OutputIterator dest) const;
 
     template <typename InputIter>
     void
@@ -422,7 +426,8 @@ using seed_seq_fe256 = seed_seq_fe<8, uint32_t>;
  *       http://www.pcg-random.org/posts/cpps-random_device.html
  */
 
-template <typename SeedSeq> class auto_seeded : public SeedSeq
+template <typename SeedSeq>
+class auto_seeded : public SeedSeq
 {
     using default_seeds = std::array<uint32_t, 11>;
 

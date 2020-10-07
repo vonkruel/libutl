@@ -15,7 +15,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class TRandIt final : public RandIt
+template <class T = Object>
+class TRandIt final : public RandIt
 {
     UTL_CLASS_DECL_TPL(TRandIt, T, RandIt);
 

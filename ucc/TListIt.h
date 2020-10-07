@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TListIt : public ListIt
+template <class T>
+class TListIt : public ListIt
 {
     UTL_CLASS_DECL_TPL(TListIt, T, ListIt);
     UTL_CLASS_DEFID;

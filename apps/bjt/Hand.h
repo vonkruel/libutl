@@ -7,7 +7,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Hand : public Object, protected FlagsMI
+class Hand
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(Hand, Object);
 

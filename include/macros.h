@@ -815,7 +815,8 @@ private:                                                                        
    \ingroup macros
 */
 #define UTL_CLASS_IMPL_CREATE_TPL(className, T)                                                    \
-    template <class T> className<T>* className<T>::create() const                                  \
+    template <class T>                                                                             \
+    className<T>* className<T>::create() const                                                     \
     {                                                                                              \
         return new className<T>();                                                                 \
     }
@@ -827,7 +828,8 @@ private:                                                                        
    \ingroup macros
 */
 #define UTL_CLASS_IMPL_CREATE_TPL2(className, T1, T2)                                              \
-    template <class T1, class T2> className<T1, T2>* className<T1, T2>::create() const             \
+    template <class T1, class T2>                                                                  \
+    className<T1, T2>* className<T1, T2>::create() const                                           \
     {                                                                                              \
         return new className<T1, T2>();                                                            \
     }
@@ -866,7 +868,8 @@ private:                                                                        
    \ingroup macros
 */
 #define UTL_CLASS_IMPL_CLONE_TPL(className, T)                                                     \
-    template <class T> className<T>* className<T>::clone() const                                   \
+    template <class T>                                                                             \
+    className<T>* className<T>::clone() const                                                      \
     {                                                                                              \
         auto object = new className<T>();                                                          \
         object->vclone(*this);                                                                     \
@@ -880,7 +883,8 @@ private:                                                                        
    \ingroup macros
 */
 #define UTL_CLASS_IMPL_CLONE_TPL2(className, T1, T2)                                               \
-    template <class T1, class T2> className<T1, T2>* className<T1, T2>::clone() const              \
+    template <class T1, class T2>                                                                  \
+    className<T1, T2>* className<T1, T2>::clone() const                                            \
     {                                                                                              \
         auto object = new className<T1, T2>();                                                     \
         object->vclone(*this);                                                                     \

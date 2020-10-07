@@ -27,7 +27,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ConditionVar : public Object, public NamedObjectMI
+class ConditionVar
+    : public Object
+    , public NamedObjectMI
 {
     UTL_CLASS_DECL(ConditionVar, Object);
     UTL_CLASS_NO_COPY;

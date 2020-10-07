@@ -4,7 +4,7 @@
 #   LIBUTL_INCLUDE_DIRS - include directories for libutl
 #   LIBUTL_LIBRARIES    - libraries to link against
 
-# ${LIBUTL_CMAKE_DIR}: directory that contains this libutl-config.make
+# ${LIBUTL_CMAKE_DIR}: directory that contains this libutl-config.cmake
 #   This will have different values for BUILD vs INSTALL:
 #     .. for BUILD:   <libutl-source-path>
 #     .. for INSTALL: <install-prefix>/lib/CMake/libutl

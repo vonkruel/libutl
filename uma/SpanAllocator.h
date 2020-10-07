@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T, class D = T> class SpanAllocator : public SpanCol<T, D>
+template <class T, class D = T>
+class SpanAllocator : public SpanCol<T, D>
 {
     UTL_CLASS_DECL_TPL2_TPL2(SpanAllocator, T, D, SpanCol, T, D);
 

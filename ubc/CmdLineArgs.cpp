@@ -7,7 +7,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class CmdLineArg : public Object, protected FlagsMI
+class CmdLineArg
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(CmdLineArg, Object);
 

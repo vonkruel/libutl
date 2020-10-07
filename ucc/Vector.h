@@ -39,7 +39,10 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> class Vector : public Object, protected FlagsMI
+template <typename T>
+class Vector
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_TPL(Vector, T, Object);
 
@@ -736,7 +739,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> Vector<T>::Vector(std::initializer_list<T> list)
+template <typename T>
+Vector<T>::Vector(std::initializer_list<T> list)
 {
     init();
     _setAllocSize(list.size());
@@ -746,14 +750,16 @@ template <typename T> Vector<T>::Vector(std::initializer_list<T> list)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> Vector<T>::Vector(size_t size, size_t increment)
+template <typename T>
+Vector<T>::Vector(size_t size, size_t increment)
 {
     init(nullptr, size, true, increment);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> Vector<T>::Vector(T* array, size_t size, bool owner, size_t increment)
+template <typename T>
+Vector<T>::Vector(T* array, size_t size, bool owner, size_t increment)
 {
     init(array, size, owner, increment);
 }

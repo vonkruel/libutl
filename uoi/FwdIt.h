@@ -23,7 +23,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class FwdIt : public Object, protected FlagsMI
+class FwdIt
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_ABC(FwdIt, Object);
 

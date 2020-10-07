@@ -51,7 +51,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T, class D = T> class SpanCol : public TRBtree<Span<T, D>>
+template <class T, class D = T>
+class SpanCol : public TRBtree<Span<T, D>>
 {
     UTL_CLASS_DECL_TPL2_TPLxTPL2(SpanCol, T, D, TRBtree, Span, T, D);
 

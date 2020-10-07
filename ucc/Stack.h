@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class Stack : public TArray<T>
+template <class T = Object>
+class Stack : public TArray<T>
 {
     UTL_CLASS_DECL_TPL(Stack, T, TArray<T>);
     UTL_CLASS_DEFID;

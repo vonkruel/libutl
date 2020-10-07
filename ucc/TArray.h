@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TArray : public Array
+template <class T>
+class TArray : public Array
 {
     UTL_CLASS_DECL_TPL(TArray, T, Array);
     UTL_CLASS_DEFID;

@@ -28,7 +28,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class String : public Object, public FlagsMI
+class String
+    : public Object
+    , public FlagsMI
 {
     UTL_CLASS_DECL(String, Object);
 
@@ -473,6 +475,9 @@ public:
 
     /** Replace all instances of lhs with rhs. */
     String& replace(const String& lhs, const String& rhs);
+
+    /** Replace all instances of lhs with rhs. */
+    String& replace(char lhs, char rhs);
 
     /** Replace all instances of lhs with rhs. */
     String&

@@ -85,7 +85,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename Callable> class ScopeGuardExit : public ScopeGuardImplBase
+template <typename Callable>
+class ScopeGuardExit : public ScopeGuardImplBase
 {
 public:
     explicit ScopeGuardExit(const Callable& callable)

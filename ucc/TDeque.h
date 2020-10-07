@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TDeque : public Deque
+template <class T>
+class TDeque : public Deque
 {
     UTL_CLASS_DECL_TPL(TDeque, T, Deque);
     UTL_CLASS_DEFID;

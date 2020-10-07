@@ -15,7 +15,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T, T nullValue = T()> class RingBuffer
+template <typename T, T nullValue = T()>
+class RingBuffer
 {
 public:
     RingBuffer()

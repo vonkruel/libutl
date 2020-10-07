@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> class ConcurrentQueue_mutex
+template <typename T>
+class ConcurrentQueue_mutex
 {
 public:
     /** Constructor */
@@ -69,14 +70,16 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> ConcurrentQueue_mutex<T>::ConcurrentQueue_mutex()
+template <typename T>
+ConcurrentQueue_mutex<T>::ConcurrentQueue_mutex()
 {
     _head = _tail = new Node();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> ConcurrentQueue_mutex<T>::~ConcurrentQueue_mutex()
+template <typename T>
+ConcurrentQueue_mutex<T>::~ConcurrentQueue_mutex()
 {
     while (_head != nullptr)
     {

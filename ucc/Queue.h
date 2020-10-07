@@ -20,7 +20,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class Queue : public TDeque<T>
+template <class T = Object>
+class Queue : public TDeque<T>
 {
     UTL_CLASS_DECL_TPL(Queue, T, TDeque<T>);
     UTL_CLASS_DEFID;

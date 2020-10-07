@@ -20,7 +20,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class PriorityQueue : public THeap<T>
+template <class T = Object>
+class PriorityQueue : public THeap<T>
 {
     UTL_CLASS_DECL_TPL(PriorityQueue, T, THeap<T>);
     UTL_CLASS_DEFID;

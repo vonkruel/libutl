@@ -27,7 +27,10 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = char> class BoyerMooreSearch : public Object, protected FlagsMI
+template <class T = char>
+class BoyerMooreSearch
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_TPL(BoyerMooreSearch, T, Object);
 

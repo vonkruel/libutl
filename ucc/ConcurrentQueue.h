@@ -15,7 +15,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> class ConcurrentQueue
+template <typename T>
+class ConcurrentQueue
 {
 public:
     /** Constructor */
@@ -75,7 +76,8 @@ ConcurrentQueue<T>::ConcurrentQueue()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> ConcurrentQueue<T>::~ConcurrentQueue()
+template <typename T>
+ConcurrentQueue<T>::~ConcurrentQueue()
 {
     while (_head != nullptr)
     {

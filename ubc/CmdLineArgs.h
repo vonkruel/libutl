@@ -29,7 +29,9 @@ class CmdLineArg;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class CmdLineArgs : public Object, protected FlagsMI
+class CmdLineArgs
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL(CmdLineArgs, Object);
 

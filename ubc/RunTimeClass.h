@@ -143,7 +143,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> class TRunTimeClass : public RunTimeClass
+template <typename T>
+class TRunTimeClass : public RunTimeClass
 {
 public:
     /**
@@ -196,7 +197,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T> class TConcreteRunTimeClass : public TRunTimeClass<T>
+template <typename T>
+class TConcreteRunTimeClass : public TRunTimeClass<T>
 {
 public:
     /**
@@ -390,27 +392,33 @@ private:                                                                        
    \ingroup reflection
 */
 #define UTL_CLASS_IMPL_RTTI_TPL(className, T)                                                      \
-    template <typename T> const utl::RunTimeClass* className<T>::getClass() const                  \
+    template <typename T>                                                                          \
+    const utl::RunTimeClass* className<T>::getClass() const                                        \
     {                                                                                              \
         return &___rtc;                                                                            \
     }                                                                                              \
-    template <typename T> const char* className<T>::getClassName() const                           \
+    template <typename T>                                                                          \
+    const char* className<T>::getClassName() const                                                 \
     {                                                                                              \
         return ___rtc.name();                                                                      \
     }                                                                                              \
-    template <typename T> const utl::RunTimeClass* className<T>::getThisClass()                    \
+    template <typename T>                                                                          \
+    const utl::RunTimeClass* className<T>::getThisClass()                                          \
     {                                                                                              \
         return &___rtc;                                                                            \
     }                                                                                              \
-    template <typename T> const char* className<T>::getThisClassName()                             \
+    template <typename T>                                                                          \
+    const char* className<T>::getThisClassName()                                                   \
     {                                                                                              \
         return ___rtc.name();                                                                      \
     }                                                                                              \
-    template <typename T> const utl::RunTimeClass* className<T>::getBaseClass()                    \
+    template <typename T>                                                                          \
+    const utl::RunTimeClass* className<T>::getBaseClass()                                          \
     {                                                                                              \
         return ___rtc.baseClass();                                                                 \
     }                                                                                              \
-    template <typename T> const char* className<T>::getBaseClassName()                             \
+    template <typename T>                                                                          \
+    const char* className<T>::getBaseClassName()                                                   \
     {                                                                                              \
         return getBaseClass()->name();                                                             \
     }                                                                                              \
@@ -426,23 +434,28 @@ private:                                                                        
     {                                                                                              \
         return &___rtc;                                                                            \
     }                                                                                              \
-    template <typename T1, typename T2> const char* className<T1, T2>::getClassName() const        \
+    template <typename T1, typename T2>                                                            \
+    const char* className<T1, T2>::getClassName() const                                            \
     {                                                                                              \
         return ___rtc.name();                                                                      \
     }                                                                                              \
-    template <typename T1, typename T2> const utl::RunTimeClass* className<T1, T2>::getThisClass() \
+    template <typename T1, typename T2>                                                            \
+    const utl::RunTimeClass* className<T1, T2>::getThisClass()                                     \
     {                                                                                              \
         return &___rtc;                                                                            \
     }                                                                                              \
-    template <typename T1, typename T2> const char* className<T1, T2>::getThisClassName()          \
+    template <typename T1, typename T2>                                                            \
+    const char* className<T1, T2>::getThisClassName()                                              \
     {                                                                                              \
         return ___rtc.name();                                                                      \
     }                                                                                              \
-    template <typename T1, typename T2> const utl::RunTimeClass* className<T1, T2>::getBaseClass() \
+    template <typename T1, typename T2>                                                            \
+    const utl::RunTimeClass* className<T1, T2>::getBaseClass()                                     \
     {                                                                                              \
         return ___rtc.baseClass();                                                                 \
     }                                                                                              \
-    template <typename T1, typename T2> const char* className<T1, T2>::getBaseClassName()          \
+    template <typename T1, typename T2>                                                            \
+    const char* className<T1, T2>::getBaseClassName()                                              \
     {                                                                                              \
         return getBaseClass()->name();                                                             \
     }
@@ -467,7 +480,8 @@ private:                                                                        
    \ingroup reflection
 */
 #define UTL_CLASS_IMPL_NAME(className)                                                             \
-    template <> const char* utl::TRunTimeClass<className>::_name = #className;
+    template <>                                                                                    \
+    const char* utl::TRunTimeClass<className>::_name = #className;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -476,7 +490,8 @@ private:                                                                        
    \ingroup reflection
 */
 #define UTL_CLASS_IMPL_NAME_TPL(className, T)                                                      \
-    template <> const char* utl::TRunTimeClass<className<T>>::_name = #className "<" #T ">";
+    template <>                                                                                    \
+    const char* utl::TRunTimeClass<className<T>>::_name = #className "<" #T ">";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

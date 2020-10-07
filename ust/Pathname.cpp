@@ -4,11 +4,49 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+namespace fs = std::filesystem;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 UTL_CLASS_IMPL(utl::Pathname);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 UTL_NS_BEGIN;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Pathname::Pathname(const fs::path& pathname)
+{
+    set(pathname.generic_u8string().c_str());
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+fs::path
+Pathname::fs_path() const
+{
+    return fs::path(get(), fs::path::generic_format);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Pathname::operator fs::path() const
+{
+    return fs::path(get(), fs::path::generic_format);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+String
+Pathname::native() const
+{
+#if UTL_HOST_TYPE == UTL_HT_UNIX
+    return self;
+#else
+    return String(self).replace(separator, native_separator);
+#endif
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -342,12 +380,12 @@ Pathname::chopSuffix()
 void
 Pathname::appendSeparator()
 {
-    // can't turn empty path into root
+    // can't turn empty path into root path
     size_t len = length();
     if (len == 0)
         return;
 
-    // don't add a slash if there already is one
+    // don't add a separator if there already is one
     if (self[len - 1] == separator)
         return;
 
@@ -361,14 +399,33 @@ void
 Pathname::removeTrailingSeparator()
 {
     char* str = get();
+    auto len = length();
+
+    // "" is left as-is
+    if (len == 0)
+        return;
+
+    // "/" is left as-is
     if ((str[0] == separator) && (str[1] == '\0'))
         return;
+
+        // Windows: "x:/" is left as-is
+#if UTL_HOST_TYPE == UTL_HT_WINDOWS
     if ((str[1] == ':') && (str[2] == separator) && (str[3] == '\0'))
         return;
-    for (size_t len = length(); (len != 0) && (str[len - 1] == separator); str[len-- - 1] = '\0')
+#endif
+
+    // idx = index of the last non-separator character
+    size_t idx;
+    for (idx = len - 1; str[idx] == separator; --idx)
         ;
-    lengthInvalidate();
-    length();
+
+    // idx = index of first separator in string of trailing separators
+    ++idx;
+
+    // idx is the new length
+    str[idx] = '\0';
+    _length = idx;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -376,18 +433,25 @@ Pathname::removeTrailingSeparator()
 void
 Pathname::normalize()
 {
-    // coalesce multiple consecutive slashes into one
-    String sep = separator;
-    String sepsep = super::repeat(separator, 2);
+    // Windows: replace '\' with '/'
+#if UTL_HOST_TYPE == UTL_HT_WINDOWS
+    replace(native_separator, separator);
+#endif
+
+    // coalesce multiple consecutive separators into one
+    char sep[2] = {separator, '\0'};
+    char sepsep[3] = {separator, separator, '\0'};
     while (find(sepsep) != size_t_max)
     {
-        replace(sepsep, sep);
+        replace(sepsep, separator);
     }
 
-    // "c:" and "c:\" are already normalized
+    // "/" is normalized
     char* s = get();
     if ((s[0] == separator) && (s[1] == '\0'))
         return;
+
+    // "x:/" is normalized
     if (isalpha(s[0]) && (s[1] == ':') && (s[2] == separator) && (s[3] == '\0'))
         return;
 
@@ -395,20 +459,38 @@ Pathname::normalize()
     appendSeparator();
 
     // replace "/./" with "/"
-    String sepdotsep = sep + "." + sep;
+    char sepdotsep[4] = {separator, '.', separator, '\0'};
     replace(sepdotsep, sep);
 
-    // replace "/foo/../" with "/"
-    String sepdotdotsep = sep + ".." + sep;
-    for (size_t idx = find(sepdotdotsep); idx != size_t_max; idx = find(sepdotdotsep))
+    // iteratively replace "foo/../" with ""
+    char sepdotdotsep[5] = {separator, '.', '.', separator, '\0'};
+    size_t findPos;
+    for (size_t idx = find(sepdotdotsep); idx != size_t_max; idx = find(sepdotdotsep, findPos))
     {
+        // "foo/bar/../"
+        //         ^   ^
+        //         |   |
+        //       idx   endIdx
         size_t endIdx = idx + 4;
+
+        // "foo/bar/../"
+        //      ^      ^
+        //      |      |
+        //    idx      endIdx
         for (s = get(), --idx; (idx != size_t_max) && (s[idx] != separator); --idx)
             ;
-        if (idx == size_t_max)
-            break;
         ++idx;
-        chop(idx, endIdx - idx);
+
+        // found a preceding name to cancel out "/../" ?
+        if (((endIdx - idx) > 4) && (s[idx] != '.'))
+        {
+            chop(idx, endIdx - idx);
+            findPos = idx;
+        }
+        else
+        {
+            findPos = endIdx;
+        }
     }
 
     // finally, remove trailing separator
@@ -418,6 +500,7 @@ Pathname::normalize()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 constexpr char Pathname::separator;
+constexpr char Pathname::native_separator;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 

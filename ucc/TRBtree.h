@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class TRBtree : public RBtree
+template <class T>
+class TRBtree : public RBtree
 {
     UTL_CLASS_DECL_TPL(TRBtree, T, RBtree);
     UTL_CLASS_DEFID;

@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.15)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 #### libutl #######################################################################################
 
@@ -12,32 +13,6 @@ set(LIBUTL_MAJOR_VERSION 1)
 set(LIBUTL_MINOR_VERSION 0)
 set(LIBUTL_PATCH_VERSION 0)
 set(LIBUTL_VERSION ${LIBUTL_MAJOR_VERSION}.${LIBUTL_MINOR_VERSION}.${LIBUTL_PATCH_VERSION})
-
-# provide the option to override the installation directories
-#   ${INSTALL_LIB_DIR}      - <install-prefix>/lib/
-#   ${INSTALL_INCLUDE_DIR}  - <install-prefix>/include/
-#   ${INSTALL_CMAKE_DIR}    - <install-prefix>/lib/cmake/libutl
-set(INSTALL_LIB_DIR lib
-    CACHE PATH
-    "Installation directory for libraries")
-set(INSTALL_INCLUDE_DIR include
-    CACHE PATH
-    "Installation directory for header files")
-if (WIN32 AND NOT CYGWIN)
-  set(DEF_INSTALL_CMAKE_DIR cmake)
-else()
-  set(DEF_INSTALL_CMAKE_DIR lib/cmake/libutl)
-endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
-    "Installation directory for CMake files")
-
-# ensure absolute paths for ${INSTALL_*_DIR}
-foreach(p LIB INCLUDE CMAKE)
-  set(var INSTALL_${p}_DIR)
-  if(NOT IS_ABSOLUTE "${${var}}")
-    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-  endif()
-endforeach()
 
 # let CMake find our modules in <source-dir>/etc/cmake/
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/etc/cmake")
@@ -103,7 +78,7 @@ set_property(TARGET libutl_static PROPERTY PREFIX "")
 set_property(TARGET libutl_static PROPERTY DEBUG_POSTFIX _g)
 
 # headers (developers need them)
-set_target_properties(libutl_static PROPERTIES PUBLIC_HEADER "${LIBUTL_HDRS}")
+set_property(TARGET libutl_static PROPERTY PUBLIC_HEADER "${LIBUTL_HDRS}")
 
 # downstream must link in the whole archive
 if (MSVC)
@@ -117,26 +92,52 @@ endif()
 
 #### BUILD ########################################################################################
 
+# enable writing to the user package registry
+set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+
 # register the build tree with the global CMake registry
 export(PACKAGE libutl)
 
-# build/libutl-config.cmake (config for BUILD)
+# build/<config>/libutl-config.cmake (config for BUILD)
 set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 configure_file(etc/cmake/libutl-config.cmake.in
                "${PROJECT_BINARY_DIR}/libutl-config.cmake"
                @ONLY)
 
-# build/libutl-config-version.cmake (config-version for BUILD)
+# build/<config>/libutl-config-version.cmake (config-version for BUILD)
 configure_file(etc/cmake/libutl-config-version.cmake.in
                "${PROJECT_BINARY_DIR}/libutl-config-version.cmake"
                @ONLY)
 
-# build/libutl-targets.cmake (exported library targets)
+# build/<config>/libutl-targets.cmake (exported library targets)
 export(TARGETS libutl-objs libutl_shared libutl_static
        NAMESPACE libutl::
        FILE "${PROJECT_BINARY_DIR}/libutl-targets.cmake")
 
 #### INSTALL ######################################################################################
+
+# ${INSTALL_LIB_DIR}: <install-prefix>/lib/
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+
+# ${INSTALL_INCLUDE_DIR}: <install-prefix>/include/
+set(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for header files")
+
+# ${INSTALL_CMAKE_DIR}: <install-prefix>/cmake           (MSVC)
+#                       <install-prefix>/lib/cmake/acms  (g++)
+if (WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR cmake)
+else()
+  set(DEF_INSTALL_CMAKE_DIR lib/cmake/libutl)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+
+# ${INSTALL_*_DIR}: all absolute paths
+foreach(p LIB INCLUDE CMAKE)
+  set(var INSTALL_${p}_DIR)
+  if(NOT IS_ABSOLUTE "${${var}}")
+    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  endif()
+endforeach()
 
 # build/CMakeFiles/libutl-config.cmake (config file for INSTALL)
 file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}" "${INSTALL_INCLUDE_DIR}")
@@ -164,7 +165,8 @@ install(FILES
         DESTINATION "${INSTALL_CMAKE_DIR}"
         COMPONENT dev)
 
-# install libutl-targets export file ----> lib/CMake/libutl
+# install: libutl-targets export file
+#    ----> lib/CMake/libutl
 install(EXPORT libutl-targets
         FILE libutl-targets.cmake
         NAMESPACE libutl::

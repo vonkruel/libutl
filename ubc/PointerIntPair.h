@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename PtrT> struct PointerLikeTraits
+template <typename PtrT>
+struct PointerLikeTraits
 {
     typedef typename std::remove_pointer<PtrT>::type T;
     static constexpr int FreeBits = (alignof(T) >= 8) ? 3 : (alignof(T) == 4) ? 2 : 1;

@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class THeapIt : public HeapIt
+template <class T>
+class THeapIt : public HeapIt
 {
     UTL_CLASS_DECL_TPL(THeapIt, T, HeapIt);
     UTL_CLASS_DEFID;

@@ -43,7 +43,10 @@ enum span_op_t
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T, class D = T> class Span : public Object, protected FlagsMI
+template <class T, class D = T>
+class Span
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_TPL2(Span, T, D, Object);
 
@@ -260,7 +263,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T, class D = T> class SpanSizeOrdering : public Ordering
+template <class T, class D = T>
+class SpanSizeOrdering : public Ordering
 {
     UTL_CLASS_DECL_TPL2(SpanSizeOrdering, T, D, Ordering);
     UTL_CLASS_DEFID;
@@ -282,7 +286,8 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T, class D = T> class ObjectSpan : public Span<T, D>
+template <class T, class D = T>
+class ObjectSpan : public Span<T, D>
 {
     UTL_CLASS_DECL_TPL2_TPL2(ObjectSpan, T, D, Span, T, D);
     UTL_CLASS_DEFID;

@@ -25,7 +25,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class TSortedCollection : public TCollection<T>
+template <class T = Object>
+class TSortedCollection : public TCollection<T>
 {
     UTL_CLASS_DECL_TPL(TSortedCollection, T, TCollection<T>);
 

@@ -65,7 +65,9 @@ typedef Stream& (*smanip0)(Stream& stream);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Stream : public Object, protected FlagsMI
+class Stream
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_ABC(Stream, Object);
 

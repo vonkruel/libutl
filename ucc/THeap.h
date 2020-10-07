@@ -21,7 +21,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> class THeap : public Heap
+template <class T>
+class THeap : public Heap
 {
     UTL_CLASS_DECL_TPL(THeap, T, Heap);
     UTL_CLASS_DEFID;

@@ -28,7 +28,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T = Object> class AutoPtr
+template <typename T = Object>
+class AutoPtr
 {
 public:
     /** Constructor. */
@@ -56,7 +57,8 @@ public:
     }
 
     /** Move constructor (moving AutoPtr<NonT>). */
-    template <typename NonT> AutoPtr(AutoPtr<NonT>&& rhs) noexcept
+    template <typename NonT>
+    AutoPtr(AutoPtr<NonT>&& rhs) noexcept
     {
         init();
         stealNonT(rhs);

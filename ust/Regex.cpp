@@ -365,6 +365,7 @@ Regex::match(const String& str, RegexMatch* p_m, size_t idx) const
         }
     }
     else
+    {
         for (size_t i = idx; str[i] != '\0'; i++)
         {
             // current char must match firstChar (if there is one)
@@ -378,6 +379,7 @@ Regex::match(const String& str, RegexMatch* p_m, size_t idx) const
                 return true;
             }
         }
+    }
 
     // match failed
     m.clear();
@@ -601,7 +603,7 @@ Regex::match(RegexMatch& m, size_t& idx, const REnode* node) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// EXPRESSION ::= BRANCH { | BRANCH } ...
+// EXPRESSION ::= BRANCH { \| BRANCH } ...
 // (implements 'OR')
 REnode*
 Regex::parseExpression(TDequeIt<String>& it, bool paren)
@@ -732,7 +734,7 @@ Regex::parseBranch(TDequeIt<String>& it)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// PIECE ::= ATOM { * | + | ? | \{ NUMBER [, NUMBER] \} }
+// PIECE ::= ATOM [ * | + | ? | \{ NUMBER [, NUMBER] \} ]
 REnode*
 Regex::parsePiece(TDequeIt<String>& it)
 {

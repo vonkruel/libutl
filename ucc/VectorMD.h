@@ -19,7 +19,8 @@ UTL_NS_BEGIN;
    \ingroup collection
 */
 
-template <class T> class VectorMD : public Object
+template <class T>
+class VectorMD : public Object
 {
     UTL_CLASS_DECL_TPL(VectorMD, T, Object);
 
@@ -68,7 +69,8 @@ private:
    \ingroup collection
 */
 
-template <class T> class Vector1d : public VectorMD<T>
+template <class T>
+class Vector1d : public VectorMD<T>
 {
     UTL_CLASS_DECL_TPL(Vector1d, T, VectorMD<T>);
 
@@ -120,7 +122,8 @@ private:
    \ingroup collection
 */
 
-template <class T> class Vector2d : public VectorMD<T>
+template <class T>
+class Vector2d : public VectorMD<T>
 {
     UTL_CLASS_DECL_TPL(Vector2d, T, VectorMD<T>);
 
@@ -172,7 +175,8 @@ private:
    \ingroup collection
 */
 
-template <class T> class Vector3d : public VectorMD<T>
+template <class T>
+class Vector3d : public VectorMD<T>
 {
     UTL_CLASS_DECL_TPL(Vector3d, T, VectorMD<T>);
 
@@ -215,7 +219,8 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> VectorMD<T>::VectorMD(size_t numDims)
+template <class T>
+VectorMD<T>::VectorMD(size_t numDims)
 {
     ASSERTD(numDims > 0);
     init();

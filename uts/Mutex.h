@@ -24,7 +24,9 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Mutex : public Object, public NamedObjectMI
+class Mutex
+    : public Object
+    , public NamedObjectMI
 {
     friend class ConditionVar;
     UTL_CLASS_DECL(Mutex, Object);

@@ -59,7 +59,9 @@ class SlistNode;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Collection : public Object, protected FlagsMI
+class Collection
+    : public Object
+    , protected FlagsMI
 {
     UTL_CLASS_DECL_ABC(Collection, Object);
 

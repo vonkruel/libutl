@@ -15,7 +15,8 @@ UTL_NS_BEGIN;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T = Object> class TBidIt final : public BidIt
+template <class T = Object>
+class TBidIt final : public BidIt
 {
     UTL_CLASS_DECL_TPL(TBidIt, T, BidIt);
 
