@@ -5,7 +5,7 @@
 
 # git pull needed?
 GIT_STATUS=$("${PACKAGE_PREFIX}-git-status")
-if [ ${GIT_STATUS} == "behind" ]; then
+if [ "${GIT_STATUS}" == "behind" ]; then
   # fresh build
   cd "${SOURCE_DIR}"
   git pull origin
